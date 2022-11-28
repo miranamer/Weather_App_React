@@ -18,6 +18,7 @@ function App() {
   const [weather, setWeather] = useState({});
   const [city, setCity] = useState();
   const [cityImg, setCityImg] = useState("");
+  const [error, setError] = useState('');
 
   const photosAPI = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=Paris&types=geocode&key=${api.photos}`;
 
@@ -30,7 +31,8 @@ function App() {
       });
   };
 
-  const handleSearch2 = async () => {
+  const handleSearch2 = async () => { // for the submit button
+    try{
     setCityImg("");
     await fetch(
       `https://api.teleport.org/api/urban_areas/slug:${search}/images/`
@@ -41,6 +43,31 @@ function App() {
       });
     handleSearch();
     setSearch("");
+    setError("");
+    }catch (error){
+      setError("City Not Found!");
+    }
+  };
+
+  const handleSearch3 = async (e) => { // for the 'Enter' key press
+    if(e.key == 'Enter'){
+      try{
+      setCityImg("");
+      await fetch(
+        `https://api.teleport.org/api/urban_areas/slug:${search}/images/`
+      )
+        .then((res) => res.json())
+        .then((result) => {
+          setCity(setCityImg(result["photos"][0]["image"]["web"]));
+        });
+      handleSearch();
+      setSearch("");
+      setError("");
+      } catch (error){
+        console.log(error.message)
+        setError("City Not Found!");
+      }
+    }
   };
 
   const dates = (d) => {
@@ -90,6 +117,7 @@ function App() {
             placeholder="Enter a city..."
             className="input input-bordered input-info w-[500px] mt-5 shadow-xl"
             value={search}
+            onKeyPress={handleSearch3}
           />
 
           <button
@@ -102,6 +130,10 @@ function App() {
 
           <h1 className="fixed bottom-4 right-10 text-2xl">Created By - Miran Amer</h1>
         </div>
+
+        {error != '' ? <div className="absolute left-[43%] top-[40%] h-[100px] w-[250px] bg-red-400 rounded-md flex justify-center items-center text-2xl font-bold">
+                          <h1 className="">{error}</h1>
+                        </div> : null}
 
         {typeof weather.main != "undefined" && cityImg != "" ? (
           <WeatherBox imageURL={cityImg} weather={weather} />
