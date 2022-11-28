@@ -5,3 +5,5 @@ This React app allows you to check the temperature in different cities along wit
 I built this app using React and styled the components using Tailwind CSS and Daisy UI. The data for the city images was fetched via the Teleport API and the weather was fetched by the OpenWeather API.
 <br />
 <li> Video Demo: https://youtu.be/JLn_IMZXRVY </li>
+
+![Weather Check Image](https://github.com/miranamer/Weather_App_React/blob/main/src/assets/weathercheckpic.png?raw=true)
